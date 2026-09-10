@@ -1841,7 +1841,14 @@ function isFirebaseConfigured() {
 }
 
 function initFirebase() {
-  if (_firebaseReady) return true;
+  // আগে ready হলেও, প্রতিবার _firebaseAuth object আসলেই ব্যবহারযোগ্য কিনা
+  // যাচাই করে নাও — Chrome tab suspend/resume (recent apps থেকে ফেরার
+  // পর)-এর মতো ক্ষেত্রে internal Firebase state ভেঙে যেতে পারে, তখন
+  // stale অবস্থা ধরে না রেখে fresh re-init করাই নিরাপদ।
+  if (_firebaseReady && _firebaseAuth && typeof firebase !== 'undefined') {
+    return true;
+  }
+  _firebaseReady = false;
   if (!isFirebaseConfigured()) {
     // এখনো FIREBASE_CONFIG-এ আসল project config বসানো হয়নি — এটা network
     // সমস্যা নয়, তাই "internet নেই" বলা যাবে না। handleGoogleLogin এটাকে
@@ -1862,6 +1869,9 @@ function initFirebase() {
     return true;
   } catch (err) {
     console.error('Firebase init failed:', err);
+    // পরের চেষ্টায় fresh state থেকে আবার init করার সুযোগ রাখো
+    _firebaseReady = false;
+    _firebaseAuth = null;
     return false;
   }
 }
