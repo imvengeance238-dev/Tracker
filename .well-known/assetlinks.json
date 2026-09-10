@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "io.github.imvengeance238_dev.twa",
+    "sha256_cert_fingerprints": ["A5:B9:67:DA:46:55:21:74:4A:AE:48:73:DE:B8:25:A9:54:9B:C8:F6:43:39:1E:C7:E6:A1:ED:49:95:CD:AD:7F"]
+  }
+}]
